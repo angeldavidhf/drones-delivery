@@ -7,7 +7,17 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "node index.js",
+    "test": "jest",
+    "migration": "sequelize db:migrate",
+    "undo-migration": "sequelize db:migrate:undo",
+    "seed": "sequelize db:seed:all",
+    "undo-seed": "sequelize db:seed:undo:all",
+    "create-model": "sequelize model:generate",
+    "create-migration": "sequelize migration:generate",
+    "create-seed": "sequelize seed:generate",
+    "reset-db": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +28,7 @@
     "express": "^4.18.2",
     "graphql": "^16.7.1",
     "graphql-tools": "^9.0.0",
+    "node-cron": "^3.0.2",
     "pg": "^8.11.1",
     "sequelize": "^6.32.1"
   }
