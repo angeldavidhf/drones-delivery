@@ -1,11 +1,15 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../../database/connection');
+const Medications = require('./medications');
 
-const Drone = sequelize.define('drones', {
+const Drones = sequelize.define('drones', {
     serialNumber: {
         type: DataTypes.STRING(100),
         allowNull: false,
         unique: true,
+        validate: {
+            len: [1, 100],
+        },
     },
     model: {
         type: DataTypes.ENUM('LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'),
@@ -14,6 +18,10 @@ const Drone = sequelize.define('drones', {
     weightLimit: {
         type: DataTypes.FLOAT,
         allowNull: false,
+        validate: {
+            min: 0,
+            max: 500,
+        },
     },
     batteryCapacity: {
         type: DataTypes.INTEGER,
@@ -30,4 +38,10 @@ const Drone = sequelize.define('drones', {
     },
 });
 
-module.exports = Drone;
+Drones.hasMany(Medications, {
+    foreignKey: 'droneId',
+    as: 'medications',
+});
+
+
+module.exports = Drones;

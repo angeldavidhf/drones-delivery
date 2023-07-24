@@ -1,7 +1,8 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const sequelize = require('../../database/connection');
+const Drones = require('./drones');
 
-const Medication = sequelize.define('medications', {
+const Medications = sequelize.define('medications', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -12,10 +13,14 @@ const Medication = sequelize.define('medications', {
     weight: {
         type: DataTypes.FLOAT,
         allowNull: false,
+        validate: {
+            min: 0,
+        },
     },
     code: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         validate: {
             is: /^[A-Z0-9_]+$/,
         },
@@ -26,4 +31,9 @@ const Medication = sequelize.define('medications', {
     },
 });
 
-module.exports = Medication;
+
+Medications.associate = (models) => {
+    Medications.belongsTo(models.Drones, { foreignKey: 'droneId' });
+};
+
+module.exports = Medications;

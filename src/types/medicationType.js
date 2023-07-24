@@ -1,7 +1,16 @@
 const { gql } = require('apollo-server-express');
 
-const medicationTypes = gql`
+const medicationType = gql`
     type Medication {
+        id: ID!
+        name: String!
+        weight: Float!
+        code: String!
+        image: String
+        drone: Drone
+    }
+
+    input MedicationInput {
         id: ID!
         name: String!
         weight: Float!
@@ -35,4 +44,4 @@ const medicationTypes = gql`
     }
 `;
 
-module.exports = medicationTypes;
+module.exports = medicationType;

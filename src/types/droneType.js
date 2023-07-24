@@ -1,6 +1,6 @@
 const { gql } = require('apollo-server-express');
 
-const droneTypes = gql`
+const droneType = gql`
     type Drone {
         id: ID!
         serialNumber: String!
@@ -8,6 +8,7 @@ const droneTypes = gql`
         weightLimit: Float!
         batteryCapacity: Int!
         state: String!
+        medications: [Medication!]!
     }
 
     input CreateDroneInput {
@@ -32,10 +33,11 @@ const droneTypes = gql`
     }
 
     extend type Mutation {
+        loadMedicationsToDrone(droneId: ID!, medications: [MedicationInput!]!): Boolean!
         createDrone(input: CreateDroneInput!): Drone!
         updateDrone(id: ID!, input: UpdateDroneInput!): Drone!
         deleteDrone(id: ID!): Boolean!
     }
 `;
 
-module.exports = droneTypes;
+module.exports = droneType;
