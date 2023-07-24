@@ -1,4 +1,8 @@
-const Drone = require('./Drone');
-const Medication = require('./Medication');
+const Drones = require('./drones');
+const Medications = require('./medications');
+const AuditLogs = require('./auditLogs');
+const BatteryLogs = require('./batteryLogs');
 
-module.exports = { Drone, Medication };
+Medications.associate({ Drones });
+
+module.exports = { Drones, Medications, AuditLogs, BatteryLogs };
