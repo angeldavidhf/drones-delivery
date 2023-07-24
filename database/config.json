@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "admin",
+    "password": "admin",
+    "database": "drone_delivery",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5432
+  },
+  "test": {
+    "username": "admin",
+    "password": "admin",
+    "database": "drone_delivery",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5432
+  },
+  "production": {
+    "username": "admin",
+    "password": "admin",
+    "database": "drone_delivery",
+    "host": "localhost",
+    "dialect": "postgres",
+    "port": 5432
+  }
+}
