@@ -1,15 +1,11 @@
 const { gql } = require('apollo-server-express');
-const droneTypes = require('./droneTypes');
-const medicationTypes = require('./medicationTypes');
 
-const rootTypes = gql`
-    type Query {
-        _empty: String # Este es solo un tipo ficticio para que el Query no esté vacío
-    }
+const rootType = require('./rootType');
+const droneType = require('./droneType');
+const medicationType = require('./medicationType');
 
-    type Mutation {
-        _empty: String # Este es solo un tipo ficticio para que el Mutation no esté vacío
-    }
+module.exports = gql`
+    ${rootType}
+    ${droneType}
+    ${medicationType}
 `;
-
-module.exports = [rootTypes, droneTypes, medicationTypes];
