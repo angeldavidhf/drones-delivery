@@ -1,14 +1,14 @@
-const droneResolvers = require('./droneResolvers');
-const medicationResolvers = require('./medicationResolvers');
+const droneResolver = require('./droneResolver');
+const medicationResolver = require('./medicationResolver');
 
 const resolvers = {
     Query: {
-        ...droneResolvers.Query,
-        ...medicationResolvers.Query,
+        ...droneResolver.Query,
+        ...medicationResolver.Query,
     },
     Mutation: {
-        ...droneResolvers.Mutation,
-        ...medicationResolvers.Mutation,
+        ...droneResolver.Mutation,
+        ...medicationResolver.Mutation,
     },
 };
 
