@@ -76,6 +76,8 @@ const loadMedicationsToDrone = async (droneId, medications) => {
         }
 
         const totalWeight = medications.reduce((acc, medication) => acc + medication.weight, 0);
+        const batteryConsumption = totalWeight * 0.1;
+        const newBatteryCapacity = drone.batteryCapacity - batteryConsumption;
 
         if (totalWeight > drone.weightLimit) {
             throw new Error('Total weight of medications exceeds drone weight limit.');
@@ -85,15 +87,20 @@ const loadMedicationsToDrone = async (droneId, medications) => {
             throw new Error('Drone must be in LOADING state to load medications.');
         }
 
-        if (drone.batteryCapacity < 25) {
+        if (newBatteryCapacity < 25) {
             throw new Error('Drone cannot be loaded if battery level is below 25%.');
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        drone.state = 'LOADED';
+        // Asociar las medicinas al dron
+        for (const medication of medications) {
+            await Medications.update({ droneId }, { where: { id: medication.id } });
+        }
 
-        const batteryConsumption = totalWeight * 0.1;
-        drone.batteryCapacity -= batteryConsumption;
+        if (totalWeight === drone.weightLimit || newBatteryCapacity < 25) {
+            drone.state = 'LOADED';
+        }
+
+        drone.batteryCapacity = newBatteryCapacity;
 
         const auditLog = await AuditLogs.create({
             droneId: drone.id,
