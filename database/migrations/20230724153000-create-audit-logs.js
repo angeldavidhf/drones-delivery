@@ -10,14 +10,6 @@ module.exports = {
                 autoIncrement: true,
                 allowNull: false,
             },
-            droneId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'drones',
-                    key: 'id',
-                },
-            },
             medications: {
                 type: DataTypes.ARRAY(DataTypes.STRING),
                 allowNull: false,

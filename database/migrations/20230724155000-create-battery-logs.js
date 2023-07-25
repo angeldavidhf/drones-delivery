@@ -9,14 +9,6 @@ module.exports = {
                 autoIncrement: true,
                 allowNull: false,
             },
-            droneId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'drones',
-                    key: 'id',
-                },
-            },
             batteryLevel: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
@@ -35,6 +27,6 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('BatteryLogs');
+        await queryInterface.dropTable('batteryLogs');
     },
 };
