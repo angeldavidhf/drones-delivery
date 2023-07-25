@@ -60,6 +60,16 @@ const droneResolver = {
                 throw new Error(error.message);
             }
         },
+        changeDroneState: async (_, { id, state }) => {
+            try {
+                // Aquí se llama a la función del controlador para cambiar el estado del dron
+                const drone = await droneController.updateDroneState(id, state);
+                return drone;
+            } catch (error) {
+                throw new Error('Error changing drone state: ' + error.message);
+            }
+        },
+
     },
     Drone: {
         medications: async (drone) => {

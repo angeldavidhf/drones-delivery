@@ -37,6 +37,7 @@ const droneType = gql`
         createDrone(input: CreateDroneInput!): Drone!
         updateDrone(id: ID!, input: UpdateDroneInput!): Drone!
         deleteDrone(id: ID!): Boolean!
+        changeDroneState(id: ID!, state: String!): Drone!
     }
 `;
 

@@ -12,7 +12,12 @@ const createDrone = async (data) => {
 
 const getAllDrones = async () => {
     try {
-        const drones = await Drones.findAll();
+        const drones = await Drones.findAll({
+            include: {
+                model: Medications,
+                as: 'medications',
+            },
+        });
         return drones;
     } catch (error) {
         throw new Error('Error fetching drones.');
@@ -30,6 +35,9 @@ const getDroneById = async (id) => {
         if (!drone) {
             throw new Error(`Drone with ID ${id} not found.`);
         }
+
+        drone.medications = drone.medications || null;
+
         return drone;
     } catch (error) {
         throw new Error('Error fetching drone with ID ' + id);
@@ -167,6 +175,20 @@ const getBatteryLogsForDrone = async (droneId) => {
     }
 };
 
+const updateDroneState = async (id, state) => {
+    try {
+        const drone = await Drones.findByPk(id);
+        if (!drone) {
+            throw new Error(`Drone with ID ${id} not found.`);
+        }
+
+        await drone.update({ state });
+        return drone;
+    } catch (error) {
+        throw new Error('Error updating drone state: ' + error.message);
+    }
+};
+
 module.exports = {
     createDrone,
     getAllDrones,
@@ -179,4 +201,5 @@ module.exports = {
     getMedicationsForDrone,
     getAuditLogsForDrone,
     getBatteryLogsForDrone,
+    updateDroneState
 };
