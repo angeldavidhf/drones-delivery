@@ -4,7 +4,7 @@ const sequelize = require('./database/connection');
 const typeDefs = require('./src/types');
 const resolvers = require('./src/resolvers');
 
-const { initBatteryCheckTask } = require('./src/controllers/droneController');
+const { initBatteryCheckTask } = require('./src/controllers/DronesController');
 
 async function startServer() {
     const app = express();
@@ -21,7 +21,7 @@ async function startServer() {
     sequelize
         .sync()
         .then(() => {
-            console.log('Database connected.');
+            console.log(':::::::::::::::::::::. Database connected .:::::::::::::::::::::');
         })
         .catch((err) => {
             console.error('Database connection error:', err);
@@ -32,7 +32,7 @@ async function startServer() {
     const PORT = process.env.PORT || 4000;
 
     app.listen(PORT, () => {
-        console.log(`Server started on http://localhost:${PORT}${server.graphqlPath}`);
+        console.log(`:::::::::::::::::::::. Server started on http://localhost:${PORT}${server.graphqlPath} .:::::::::::::::::::::`);
     });
 }
 

@@ -1,5 +1,6 @@
 const { ApolloError } = require('apollo-server-express');
-const { Drones } = require('../models');
+const { Drones, BatteryLogs } = require('../models');
+const cron = require("node-cron");
 
 const DronesController = {
     getAllDrones: async () => {
@@ -13,6 +14,7 @@ const DronesController = {
             throw new Error(`Error fetching drones: ${error.message}`);
         }
     },
+
     getDroneById: async (id) => {
         try {
             const drone = await Drones.findByPk(id, {
@@ -27,7 +29,9 @@ const DronesController = {
             throw new Error(`Error fetching drone by ID: ${error.message}`);
         }
     },
-    createDrone: async ({ serialNumber, model, weightLimit, battery }) => {
+
+    createDrone: async (input) => {
+        const { serialNumber, model, weightLimit, battery } = input;
         try {
             const validModels = ['LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'];
 
@@ -45,7 +49,7 @@ const DronesController = {
                 weightLimit,
                 battery,
                 state: 'IDLE',
-                flagDrop: false,
+                flagDelete: false,
             });
 
             return newDrone;
@@ -53,6 +57,7 @@ const DronesController = {
             throw new Error(`Error creating drone: ${error.message}`);
         }
     },
+
     updateDrone: async ({ id, model, weightLimit, battery }) => {
         try {
             const validModels = ['LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'];
@@ -84,6 +89,7 @@ const DronesController = {
             throw new Error('Error updating drone.');
         }
     },
+
     temporaryDeleteDrone: async (id) => {
         try {
             const drone = await Drones.findByPk(id, {
@@ -94,7 +100,7 @@ const DronesController = {
                 throw new Error('Drone not found.');
             }
 
-            drone.flagDelete = true;
+            drone.flagDelete = !drone.flagDelete;
 
             await drone.save();
 
@@ -103,6 +109,7 @@ const DronesController = {
             throw new Error('Error deleting drone.');
         }
     },
+
     permanentDeleteDrone: async (id) => {
         try {
             const drone = await Drones.findByPk(id, {
@@ -119,6 +126,29 @@ const DronesController = {
         } catch (error) {
             throw new Error('Error deleting drone.');
         }
+    },
+
+
+    initBatteryCheckTask: () => {
+        cron.schedule('*/10 * * * *', async () => {
+            try {
+                const drones = await Drones.findAll({
+                    where: { flagDelete: false }
+                });
+
+                for (const drone of drones) {
+                    const currentBatteryLevel = drone.battery;
+                    await BatteryLogs.create({
+                        droneId: drone.id,
+                        batteryLevel: currentBatteryLevel,
+                    });
+                }
+
+                console.log(':::::::::::::::::::::. Battery check task executed successfully .:::::::::::::::::::::');
+            } catch (error) {
+                console.error('Error executing battery check task:', error.message);
+            }
+        });
     },
 }
 
