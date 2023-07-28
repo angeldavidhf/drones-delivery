@@ -3,28 +3,26 @@ const { DataTypes } = require('sequelize');
 
 module.exports = {
     up: async (queryInterface, Sequelize) => {
-        await queryInterface.createTable('medications', {
+        await queryInterface.createTable('battery_logs', {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
                 allowNull: false,
             },
-            name: {
-                type: DataTypes.STRING,
+            droneId: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'drones',
+                    key: 'id',
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE',
             },
-            weight: {
-                type: DataTypes.FLOAT,
+            batteryLevel: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-            },
-            code: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            image: {
-                type: DataTypes.STRING,
-                allowNull: true,
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -40,6 +38,6 @@ module.exports = {
     },
 
     down: async (queryInterface, Sequelize) => {
-        await queryInterface.dropTable('medications');
-    },
+        await queryInterface.dropTable('battery_logs');
+    }
 };

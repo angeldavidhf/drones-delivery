@@ -14,22 +14,39 @@ module.exports = {
                 type: DataTypes.STRING(100),
                 allowNull: false,
                 unique: true,
+                validate: {
+                    len: [1, 100],
+                },
             },
             model: {
-                type: DataTypes.STRING,
+                type: DataTypes.ENUM('LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'),
                 allowNull: false,
             },
             weightLimit: {
                 type: DataTypes.FLOAT,
                 allowNull: false,
+                validate: {
+                    min: 0,
+                    max: 500,
+                },
             },
-            batteryCapacity: {
+            battery: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    min: 0,
+                    max: 100,
+                },
             },
             state: {
-                type: DataTypes.STRING,
+                type: DataTypes.ENUM('IDLE', 'LOADING', 'LOADED', 'DELIVERING', 'DELIVERED', 'RETURNING'),
                 allowNull: false,
+                defaultValue: 'IDLE',
+            },
+            flagDelete: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
             },
             createdAt: {
                 type: DataTypes.DATE,
@@ -46,5 +63,5 @@ module.exports = {
 
     down: async (queryInterface, Sequelize) => {
         await queryInterface.dropTable('drones');
-    },
+    }
 };
