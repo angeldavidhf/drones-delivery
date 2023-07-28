@@ -53,6 +53,26 @@ const BatteryLogsController = {
         }
     },
 
+    updateBatteryLog: async ({ id, batteryLevel }) => {
+        try {
+            const batteryLog = await BatteryLogs.findByPk(id);
+            if (!batteryLog) {
+                throw new Error('Battery log entry not found.');
+            }
+
+            if (batteryLevel < 0 || batteryLevel > 100) {
+                throw new Error('Invalid battery level. Battery level must be between 0 and 100.');
+            }
+
+            batteryLog.batteryLevel = batteryLevel;
+            await batteryLog.save();
+
+            return batteryLog;
+        } catch (error) {
+            throw new Error('Error updating battery log entry.');
+        }
+    },
+
     deleteBatteryLogsForDrone: async (droneId) => {
         try {
             const drone = await Drones.findByPk(droneId, {
