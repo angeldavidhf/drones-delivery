@@ -1,8 +1,13 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../database/connection');
-const Medications = require('./medications');
 
 const Drones = sequelize.define('drones', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+    },
     serialNumber: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -23,7 +28,7 @@ const Drones = sequelize.define('drones', {
             max: 500,
         },
     },
-    batteryCapacity: {
+    battery: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -36,12 +41,33 @@ const Drones = sequelize.define('drones', {
         allowNull: false,
         defaultValue: 'IDLE',
     },
+    flagDelete: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()'),
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.literal('NOW()'),
+    },
 });
 
-Drones.hasMany(Medications, {
-    foreignKey: 'droneId',
-    as: 'medications',
-});
+Drones.associate = ({ BatteryLogs, DronesMedications }) => {
+    Drones.hasMany(BatteryLogs, {
+        foreignKey: 'droneId',
+        as: 'battery_logs'
+    });
 
+    Drones.hasMany(DronesMedications, {
+        foreignKey: 'droneId',
+        as: 'drones_medications'
+    });
+};
 
 module.exports = Drones;
