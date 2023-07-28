@@ -39,7 +39,7 @@ const MedicationsController = {
                 name,
                 weight,
                 code,
-                flagDrop: false,
+                flagDelete: false,
             });
 
             return newMedication;
