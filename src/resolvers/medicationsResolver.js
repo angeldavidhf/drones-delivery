@@ -21,17 +21,17 @@ const medicationsResolver = {
         },
     },
     Mutation: {
-        createMedication: async (parent, { name, weight, code }) => {
+        createMedication: async (parent, { input }) => {
             try {
-                const newMedication = await MedicationsController.createMedication({ name, weight, code });
+                const newMedication = await MedicationsController.createMedication(input);
                 return newMedication;
             } catch (error) {
                 throw new ApolloError('Error creating medication.', 'CREATE_MEDICATION_ERROR', error);
             }
         },
-        updateMedication: async (parent, { id, name, weight, code }) => {
+        updateMedication: async (parent, { input }) => {
             try {
-                const updatedMedication = await MedicationsController.updateMedication({ id, name, weight, code });
+                const updatedMedication = await MedicationsController.updateMedication(input);
                 return updatedMedication;
             } catch (error) {
                 throw new ApolloError('Error updating medication.', 'UPDATE_MEDICATION_ERROR', error);

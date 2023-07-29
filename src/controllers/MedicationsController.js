@@ -28,8 +28,9 @@ const MedicationsController = {
         }
     },
 
-    createMedication: async ({ name, weight, code }) => {
+    createMedication: async (input) => {
         try {
+            const { name, weight, code } = input;
             const codeRegex = /^[A-Z0-9_]+$/;
             if (!codeRegex.test(code)) {
                 throw new Error('Invalid medication code. Code must contain only upper case letters, underscores, and numbers.');
@@ -48,8 +49,9 @@ const MedicationsController = {
         }
     },
 
-    updateMedication: async ({ id, name, weight, code }) => {
+    updateMedication: async (input) => {
         try {
+            const { id, name, weight, code } = input;
             const codeRegex = /^[A-Z0-9_]+$/;
             if (!codeRegex.test(code)) {
                 throw new Error('Invalid medication code. Code must contain only upper case letters, underscores, and numbers.');
