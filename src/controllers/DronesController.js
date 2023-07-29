@@ -39,12 +39,16 @@ const DronesController = {
     },
 
     createDrone: async (input) => {
-        const { serialNumber, model, weightLimit, battery } = input;
         try {
+            const { serialNumber, model, weightLimit, battery } = input;
             const validModels = ['LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'];
 
             if (!validModels.includes(model)) {
                 throw new Error('Invalid drone model.');
+            }
+
+            if (weightLimit < 0 || weightLimit > 500) {
+                throw new Error('Invalid weight. Weight limit must be between 0 and 500.');
             }
 
             if (battery < 0 || battery > 100) {
@@ -69,10 +73,14 @@ const DronesController = {
     updateDrone: async (input) => {
         try {
             const { id, model, weightLimit, battery } = input;
-
             const validModels = ['LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'];
+
             if (!validModels.includes(model)) {
                 throw new Error('Invalid drone model.');
+            }
+
+            if (weightLimit < 0 || weightLimit > 500) {
+                throw new Error('Invalid weight. Weight limit must be between 0 and 500.');
             }
 
             if (battery < 0 || battery > 100) {
