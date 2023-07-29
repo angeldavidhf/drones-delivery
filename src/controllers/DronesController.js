@@ -1,4 +1,3 @@
-const { ApolloError } = require('apollo-server-express');
 const { Drones, BatteryLogs } = require('../models');
 const cron = require("node-cron");
 
@@ -6,27 +5,36 @@ const DronesController = {
     getAllDrones: async () => {
         try {
             const drones = await Drones.findAll({
-                include: 'battery_logs',
+                include: {
+                    model: BatteryLogs,
+                    as: 'battery_logs',
+                },
                 where: { flagDelete: false }
             });
             return drones;
         } catch (error) {
-            throw new Error(`Error fetching drones: ${error.message}`);
+            throw new Error(error.message);
         }
     },
 
     getDroneById: async (id) => {
         try {
-            const drone = await Drones.findByPk(id, {
-                include: 'battery_logs',
-                where: { flagDelete: false }
+            const drone = await Drones.findOne({
+                include: {
+                    model: BatteryLogs,
+                    as: 'battery_logs',
+                },
+                where: {
+                    id: id,
+                    flagDelete: false,
+                },
             });
             if (!drone) {
                 throw new Error('Drone not found.');
             }
             return drone;
         } catch (error) {
-            throw new Error(`Error fetching drone by ID: ${error.message}`);
+            throw new Error(error.message);
         }
     },
 
@@ -54,14 +62,15 @@ const DronesController = {
 
             return newDrone;
         } catch (error) {
-            throw new Error(`Error creating drone: ${error.message}`);
+            throw new Error(error.message);
         }
     },
 
-    updateDrone: async ({ id, model, weightLimit, battery }) => {
+    updateDrone: async (input) => {
         try {
-            const validModels = ['LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'];
+            const { id, model, weightLimit, battery } = input;
 
+            const validModels = ['LightWeight', 'MiddleWeight', 'CruiserWeight', 'HeavyWeight'];
             if (!validModels.includes(model)) {
                 throw new Error('Invalid drone model.');
             }
@@ -70,8 +79,11 @@ const DronesController = {
                 throw new Error('Invalid battery level. Battery level must be between 0 and 100.');
             }
 
-            const drone = await Drones.findByPk(id, {
-                where: { flagDelete: false }
+            const drone = await Drones.findOne({
+                where: {
+                    id: id,
+                    flagDelete: false,
+                },
             });
 
             if (!drone) {
@@ -86,14 +98,17 @@ const DronesController = {
 
             return drone;
         } catch (error) {
-            throw new Error('Error updating drone.');
+            throw new Error(error.message);
         }
     },
 
     temporaryDeleteDrone: async (id) => {
         try {
-            const drone = await Drones.findByPk(id, {
-                where: { flagDelete: false }
+            const drone = await Drones.findOne({
+                where: {
+                    id: id,
+                    flagDelete: false,
+                },
             });
 
             if (!drone) {
@@ -106,25 +121,32 @@ const DronesController = {
 
             return true;
         } catch (error) {
-            throw new Error('Error deleting drone.');
+            throw new Error(error.message);
         }
     },
 
     permanentDeleteDrone: async (id) => {
         try {
-            const drone = await Drones.findByPk(id, {
-                where: { flagDelete: false }
+            const drone = await Drones.findOne({
+                where: {
+                    id: id,
+                    flagDelete: false,
+                }
             });
 
             if (!drone) {
                 throw new Error('Drone not found.');
             }
 
+            await BatteryLogs.destroy({
+                where: { droneId: id },
+            });
+
             await drone.destroy();
 
             return true;
         } catch (error) {
-            throw new Error('Error deleting drone.');
+            throw new Error(error.message);
         }
     },
 
@@ -146,7 +168,7 @@ const DronesController = {
 
                 console.log(':::::::::::::::::::::. Battery check task executed successfully .:::::::::::::::::::::');
             } catch (error) {
-                console.error('Error executing battery check task:', error.message);
+                console.error('Error executing battery check task: ', error.message);
             }
         });
     },

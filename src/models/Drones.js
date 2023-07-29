@@ -49,12 +49,12 @@ const Drones = sequelize.define('drones', {
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('NOW()'),
+        defaultValue: DataTypes.NOW,
     },
     updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('NOW()'),
+        defaultValue: DataTypes.NOW,
     },
 });
 
