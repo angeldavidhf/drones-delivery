@@ -27,12 +27,12 @@ const BatteryLogs = sequelize.define('battery_logs', {
     createdAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('NOW()'),
+        defaultValue: DataTypes.NOW,
     },
     updatedAt: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: sequelize.literal('NOW()'),
+        defaultValue: DataTypes.NOW,
     },
 });
 

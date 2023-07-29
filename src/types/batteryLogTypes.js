@@ -26,8 +26,6 @@ const batteryLogTypes = gql`
     }
 
     type Mutation {
-        createBatteryLog(input: CreateBatteryLogInput!): BatteryLog
-        updateBatteryLog(input: UpdateBatteryLogInput!): BatteryLog
         deleteBatteryLogsForDrone(droneId: ID!): Boolean
     }
 `;
