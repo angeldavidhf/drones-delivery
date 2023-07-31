@@ -1,4 +1,4 @@
-const { Drones, BatteryLogs } = require('../models');
+const { Drones, BatteryLogs, DronesMedications } = require('../models');
 const cron = require("node-cron");
 
 const DronesController = {
@@ -32,6 +32,23 @@ const DronesController = {
                 throw new Error('Drone not found.');
             }
             return drone;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
+
+    getDronesByState: async (state) => {
+        try {
+            return await Drones.findAll({
+                include: {
+                    model: BatteryLogs,
+                    as: 'battery_logs',
+                },
+                where: {
+                    state: state,
+                    flagDelete: false,
+                },
+            });
         } catch (error) {
             throw new Error(error.message);
         }
@@ -182,7 +199,18 @@ const DronesController = {
                     drone.state = 'DELIVERED';
                     break;
                 case 'DELIVERED':
+                    const newMedicationsData = {
+                        deliveryStatus: 'DELIVERED'
+                    };
+                    DronesMedications.update(newMedicationsData, {
+                        where: {
+                            droneId: id,
+                        },
+                    })
                     drone.state = 'RETURNING';
+                    break;
+                case 'RETURNING':
+                    drone.state = 'IDLE';
                     break;
             }
 

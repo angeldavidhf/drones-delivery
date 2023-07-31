@@ -17,6 +17,14 @@ const dronesResolver = {
                 throw new ApolloError(`Error fetching drone by ID: ${error}`, 'FETCH_DRONE_BY_ID_ERROR', { id });
             }
         },
+        getDronesByState: async (parent, { state }) => {
+            try {
+                return await DronesController.getDronesByState(state);
+            } catch (error) {
+                throw new ApolloError(`Error fetching drone by state: ${error}`, 'FETCH_DRONE_BY_STATE_ERROR', { id });
+            }
+        },
+
     },
     Mutation: {
         createDrone: async (parent, { input }) => {

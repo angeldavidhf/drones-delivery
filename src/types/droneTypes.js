@@ -30,6 +30,7 @@ const droneTypes = gql`
     type Query {
         getAllDrones: [Drone!]!
         getDroneById(id: ID!): Drone
+        getDronesByState(state: String!): [Drone!]!
     }
 
     type Mutation {
