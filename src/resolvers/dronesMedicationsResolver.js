@@ -3,46 +3,27 @@ const DronesMedicationsController = require('../controllers/DronesMedicationsCon
 
 const dronesMedicationsResolver = {
     Query: {
-        getAllDroneMedications: async () => {
+        getMedicationsForDrone: async (parent, { droneId }) => {
             try {
-                const droneMedications = await DronesMedicationsController.getAllDroneMedications();
-                return droneMedications;
+                return await DronesMedicationsController.getMedicationsForDrone(droneId);
             } catch (error) {
-                throw new ApolloError('Error fetching drone-medications entries.', 'FETCH_DRONE_MEDICATIONS_ERROR', error);
+                throw new ApolloError(`Error fetching medications for drone entry by ID: ${error}`, 'FETCH_DRONE_MEDICATIONS_BY_ID_ERROR', { droneId });
             }
         },
-        getDroneMedicationById: async (parent, { id }) => {
+        getDronesForMedication: async (parent, { medicationId }) => {
             try {
-                const droneMedication = await DronesMedicationsController.getDroneMedicationById(id);
-                return droneMedication;
+                return await DronesMedicationsController.getDronesForMedication(medicationId);
             } catch (error) {
-                throw new ApolloError('Error fetching drone-medication entry by ID.', 'FETCH_DRONE_MEDICATION_BY_ID_ERROR', error);
+                throw new ApolloError(`Error fetching drones form medication entry by ID: ${error}`, 'FETCH_DRONES_MEDICATION_BY_ID_ERROR', { medicationId });
             }
         },
     },
     Mutation: {
-        createDroneMedication: async (parent, { input }) => {
+        loadMedicationsToDrone: async (parent, { droneId, medications }) => {
             try {
-                const newDroneMedication = await DronesMedicationsController.createDroneMedication(input);
-                return newDroneMedication;
+                return await DronesMedicationsController.loadMedicationsToDrone(droneId, medications);
             } catch (error) {
-                throw new ApolloError('Error creating drone-medication entry.', 'CREATE_DRONE_MEDICATION_ERROR', error);
-            }
-        },
-        updateDroneMedication: async (parent, { input }) => {
-            try {
-                const updatedDroneMedication = await DronesMedicationsController.updateDroneMedication(input);
-                return updatedDroneMedication;
-            } catch (error) {
-                throw new ApolloError('Error updating drone-medication entry.', 'UPDATE_DRONE_MEDICATION_ERROR', error);
-            }
-        },
-        deleteDroneMedication: async (parent, { id }) => {
-            try {
-                const result = await DronesMedicationsController.deleteDroneMedication(id);
-                return result;
-            } catch (error) {
-                throw new ApolloError('Error deleting drone-medication entry.', 'DELETE_DRONE_MEDICATION_ERROR', error);
+                throw new ApolloError(`Error loading medications in drone: ${error}`, 'LOADING_MEDICATIONS_BY_DRONE_ERROR', { droneId, medications });
             }
         },
     },

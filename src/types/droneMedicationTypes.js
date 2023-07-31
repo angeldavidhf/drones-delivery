@@ -11,28 +11,20 @@ const droneMedicationTypes = gql`
         updatedAt: String!
     }
 
-    input CreateDroneMedicationInput {
+    type LoadedMedication {
         droneId: ID!
         medicationId: ID!
         batteryUse: Int!
         deliveryStatus: String!
     }
 
-    input UpdateDroneMedicationInput {
-        id: ID!
-        batteryUse: Int!
-        deliveryStatus: String!
-    }
-
     type Query {
-        getAllDroneMedications: [DroneMedication!]!
-        getDroneMedicationById(id: ID!): DroneMedication
+        getMedicationsForDrone(droneId: ID!): [DroneMedication!]!
+        getDronesForMedication(medicationId: ID!): [DroneMedication!]!
     }
 
     type Mutation {
-        createDroneMedication(input: CreateDroneMedicationInput!): DroneMedication
-        updateDroneMedication(input: UpdateDroneMedicationInput!): DroneMedication
-        deleteDroneMedication(id: ID!): Boolean
+        loadMedicationsToDrone(droneId: ID!, medications: [ID!]!): [LoadedMedication!]!
     }
 `;
 
