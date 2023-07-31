@@ -35,6 +35,7 @@ const droneTypes = gql`
     type Mutation {
         createDrone(input: CreateDroneInput!): Drone
         updateDrone(input: UpdateDroneInput!): Drone
+        changeStateDrone(id: ID!): Boolean
         temporaryDeleteDrone(id: ID!): Boolean
         permanentDeleteDrone(id: ID!): Boolean
     }
