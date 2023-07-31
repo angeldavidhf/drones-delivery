@@ -13,7 +13,7 @@ const DronesMedicationsController = {
                 throw new Error('Drone not found.');
             }
 
-            const droneMedication = await DronesMedications.findAll({
+            return await DronesMedications.findAll({
                 where: { droneId },
                 include: [
                     {
@@ -22,12 +22,10 @@ const DronesMedicationsController = {
                     },
                     {
                         model: Medications,
-                        as: 'medications',
+                        as: 'medication',
                     }
                 ]
             });
-
-            return droneMedication;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -45,12 +43,12 @@ const DronesMedicationsController = {
                 throw new Error('Medication not found.');
             }
 
-            const droneMedication = await DronesMedications.findAll({
+            return await DronesMedications.findAll({
                 where: { medicationId },
                 include: [
                     {
                         model: Drones,
-                        as: 'drones',
+                        as: 'drone',
                     },
                     {
                         model: Medications,
@@ -58,8 +56,6 @@ const DronesMedicationsController = {
                     }
                 ]
             });
-
-            return droneMedication;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -117,7 +113,7 @@ const DronesMedicationsController = {
 
             return newDroneMedication;
         } catch (error) {
-            throw new Error('Error creating drone-medication entry.');
+            throw new Error(error.message);
         }
     },
 
@@ -140,7 +136,7 @@ const DronesMedicationsController = {
 
             return droneMedication;
         } catch (error) {
-            throw new Error('Error updating drone-medication entry.');
+            throw new Error(error.message);
         }
     },
 
@@ -155,7 +151,7 @@ const DronesMedicationsController = {
 
             return true;
         } catch (error) {
-            throw new Error('Error deleting drone-medication entry.');
+            throw new Error(error.message);
         }
     },
 };

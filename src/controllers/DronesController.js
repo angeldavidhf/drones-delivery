@@ -4,14 +4,13 @@ const cron = require("node-cron");
 const DronesController = {
     getAllDrones: async () => {
         try {
-            const drones = await Drones.findAll({
+            return await Drones.findAll({
                 include: {
                     model: BatteryLogs,
                     as: 'battery_logs',
                 },
                 where: { flagDelete: false }
             });
-            return drones;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -55,7 +54,7 @@ const DronesController = {
                 throw new Error('Invalid battery level. Battery level must be between 0 and 100.');
             }
 
-            const newDrone = await Drones.create({
+            return await Drones.create({
                 serialNumber,
                 model,
                 weightLimit,
@@ -63,8 +62,6 @@ const DronesController = {
                 state: 'IDLE',
                 flagDelete: false,
             });
-
-            return newDrone;
         } catch (error) {
             throw new Error(error.message);
         }
@@ -158,6 +155,43 @@ const DronesController = {
         }
     },
 
+    changeStateDrone: async (id) => {
+        try {
+            const drone = await Drones.findOne({
+                where: {
+                    id: id,
+                    flagDelete: false,
+                },
+            });
+
+            if (!drone) {
+                throw new Error('Drone not found.');
+            }
+
+            switch (drone.state) {
+                case 'IDLE':
+                    drone.state = 'LOADING';
+                    break;
+                case 'LOADING':
+                    drone.state = 'LOADED';
+                    break;
+                case 'LOADED':
+                    drone.state = 'DELIVERING';
+                    break;
+                case 'DELIVERING':
+                    drone.state = 'DELIVERED';
+                    break;
+                case 'DELIVERED':
+                    drone.state = 'RETURNING';
+                    break;
+            }
+
+            await drone.save();
+            return true;
+        } catch (error) {
+            throw new Error(error.message);
+        }
+    },
 
     initBatteryCheckTask: () => {
         cron.schedule('*/10 * * * *', async () => {

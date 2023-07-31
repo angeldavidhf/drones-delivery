@@ -3,13 +3,12 @@ const { BatteryLogs, Drones } = require('../models');
 const BatteryLogsController = {
     getAllBatteryLogs: async () => {
         try {
-            const batteryLogs = await BatteryLogs.findAll({
+            return await BatteryLogs.findAll({
                 include: {
                     model: Drones,
                     as: 'drone',
                 }
             });
-            return batteryLogs;
         } catch (error) {
             throw new Error('Error fetching battery logs.');
         }
@@ -27,15 +26,13 @@ const BatteryLogsController = {
                 throw new Error('Drone not found.');
             }
 
-            const batteryLogs = await BatteryLogs.findAll({
+            return await BatteryLogs.findAll({
                 where: { droneId },
                 include: {
                     model: Drones,
                     as: 'drone',
                 }
             });
-
-            return batteryLogs;
         } catch (error) {
             throw new Error(error.message);
         }

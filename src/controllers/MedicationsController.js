@@ -1,13 +1,18 @@
-const { Medications } = require('../models');
+const { Medications, BatteryLogs, DronesMedications, Drones} = require('../models');
 
 const MedicationsController = {
     getAllMedications: async () => {
         try {
-            const medications = await Medications.findAll({
-                include: 'drones_medications',
+            return await Medications.findAll({
+                include: {
+                    model: DronesMedications,
+                    as: 'drones_medications',
+                    include: [
+                        { model: Drones, as: 'drone' }
+                    ]
+                },
                 where: { flagDelete: false }
             });
-            return medications;
         } catch (error) {
             throw new Error('Error fetching medications.');
         }
@@ -15,9 +20,18 @@ const MedicationsController = {
 
     getMedicationById: async (id) => {
         try {
-            const medication = await Medications.findByPk(id, {
-                include: 'drones_medications',
-                where: { flagDelete: false }
+            const medication = await Medications.findOne({
+                include: {
+                    model: DronesMedications,
+                    as: 'drones_medications',
+                    include: [
+                        { model: Drones, as: 'drone' }
+                    ]
+                },
+                where: {
+                    id: id,
+                    flagDelete: false,
+                },
             });
             if (!medication) {
                 throw new Error('Medication not found.');
@@ -31,19 +45,16 @@ const MedicationsController = {
     createMedication: async (input) => {
         try {
             const { name, weight, code } = input;
-            const codeRegex = /^[A-Z0-9_]+$/;
+            const codeRegex = /^[A-Z0-9_-]+$/;
             if (!codeRegex.test(code)) {
                 throw new Error('Invalid medication code. Code must contain only upper case letters, underscores, and numbers.');
             }
-
-            const newMedication = await Medications.create({
+            return await Medications.create({
                 name,
                 weight,
                 code,
                 flagDelete: false,
             });
-
-            return newMedication;
         } catch (error) {
             throw new Error('Error creating medication.');
         }
@@ -52,7 +63,7 @@ const MedicationsController = {
     updateMedication: async (input) => {
         try {
             const { id, name, weight, code } = input;
-            const codeRegex = /^[A-Z0-9_]+$/;
+            const codeRegex = /^[A-Z0-9_-]+$/;
             if (!codeRegex.test(code)) {
                 throw new Error('Invalid medication code. Code must contain only upper case letters, underscores, and numbers.');
             }
