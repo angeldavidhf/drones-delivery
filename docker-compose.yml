@@ -1,0 +1,16 @@
+version: "3"
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: drone_delivery_db
+    ports:
+      - "5432:5432"
