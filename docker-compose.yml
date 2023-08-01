@@ -1,21 +1,24 @@
 version: "3"
 services:
   db:
-    image: postgres:latest
-    container_name: 3f609ffee183c222665dbc0087a4826d1c2e1e1720dcd44a43e153c9cba657ec
+    build:
+      context: .
+      dockerfile: Dockerfile-db
+    container_name: drones-delivery-db
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: drones_delivery_db
+    command: ["postgres", "-c", "max_connections=300", "-c", "shared_buffers=1024MB"]
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: drones-delivery
+    container_name: drones-delivery-app
     ports:
-      - "3000:3000"
+      - "4000:4000"
     depends_on:
       - db
     environment:

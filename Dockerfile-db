@@ -1,0 +1,10 @@
+FROM postgres:latest
+
+ENV POSTGRES_USER=admin
+ENV POSTGRES_PASSWORD=admin
+ENV POSTGRES_DB=drones_delivery_db
+
+EXPOSE 5432
+
+COPY ./database/migrations /docker-entrypoint-initdb.d/migrations
+COPY ./database/seeders /docker-entrypoint-initdb.d/seeders
