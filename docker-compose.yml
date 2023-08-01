@@ -1,16 +1,24 @@
 version: "3"
 services:
+  db:
+    image: postgres:latest
+    container_name: 3f609ffee183c222665dbc0087a4826d1c2e1e1720dcd44a43e153c9cba657ec
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: drones_delivery_db
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: drones-delivery
     ports:
       - "3000:3000"
     depends_on:
       - db
-  db:
-    image: postgres:latest
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: drone_delivery_db
-    ports:
-      - "5432:5432"
+      DATABASE_URL: postgres://admin:admin@db:5432/drones_delivery_db
+    volumes:
+      - .:/app

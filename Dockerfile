@@ -1,8 +1,8 @@
-FROM node:14
+FROM node:18
 LABEL authors="Angel David"
-WORKDIR /src
-COPY package*.json ./
+WORKDIR /app
+COPY package.json package-lock.json /app/
 RUN npm install
-COPY . .
+COPY . /app
 EXPOSE 3000
 CMD ["npm", "start"]

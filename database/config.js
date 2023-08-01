@@ -2,7 +2,7 @@ module.exports = {
   development: {
     username: "admin",
     password: "admin",
-    database: "drone_delivery_db",
+    database: "drones_delivery_db",
     host: "localhost",
     dialect: "postgres",
     port: 5432,
@@ -15,7 +15,7 @@ module.exports = {
   test: {
     username: "admin",
     password: "admin",
-    database: "drone_delivery_db",
+    database: "drones_delivery_db",
     host: "localhost",
     dialect: "postgres",
     port: 5432
@@ -23,7 +23,7 @@ module.exports = {
   production: {
     username: "admin",
     password: "admin",
-    database: "drone_delivery_db",
+    database: "drones_delivery_db",
     host: "localhost",
     dialect: "postgres",
     port: 5432
